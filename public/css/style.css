@@ -1,10 +1,4 @@
-.section-videos {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    position: relative;
-}
+
 
 .container {
     max-width: 1200px;
@@ -84,15 +78,6 @@
     position: absolute;
     margin: 0;
     transition: max-width 1s ease;
-}
-
-.overlay-active {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .6);
-    z-index: 9;
-    transition: 1s;
 }
 
 .controllers {

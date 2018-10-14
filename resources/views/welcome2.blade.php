@@ -61,42 +61,52 @@
 
 		</div>
 	</section>	
-	
 	<section class="section-videos" id="section-videos">
-		<div class="wrap">
-			<div class="iframe-group">
-				<i class="arrow left" id="arrow-left"></i>
-				<div id="slider">
-					<div class="slide slide1">
-						<div class="slide-content">
-							<span>Image One</span>				
-						</div>
-					</div>
-					<div class="slide slide2">
-						<div class="slide-content">
-							<span>Image Two</span>
-							<iframe class="iframe" src="https://www.youtube.com/embed/88PMbKJnqfM?enablejsapi=1" frameborder="0"
-	                            allow="autoplay; encrypted-media" allowfullscreen>
-	                        </iframe>
-						</div>
-					</div>
-					<div class="slide slide3">
-						<div class="slide-content">
-							<span>Image Three</span>
-							<iframe class="iframe" src="https://www.youtube.com/embed/8LNW_Psocjk?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media"
-	                            allowfullscreen>
-	                        </iframe>
-						</div>
+		<video 
+			id="video-background" 
+			autoplay
+			muted 
+			playsinline
+			src="https://player.vimeo.com/external/158148793.hd.mp4?s=8e8741dbee251d5c35a759718d4b0976fbf38b6f&profile_id=119&oauth2_token_id=57447761" 
+			type="video/mp4"
+			></video>
+		<div class="video-group">
+			<i class="arrow left" id="arrow-left"></i>
+			<div id="slider">
+				<div class="slide slide1">
+					<div class="slide-content">
+						<video 
+							src="https://player.vimeo.com/external/158148793.hd.mp4?s=8e8741dbee251d5c35a759718d4b0976fbf38b6f&profile_id=119&oauth2_token_id=57447761"
+							controls	
+						></video>				
 					</div>
 				</div>
-				<i class="arrow right" id="arrow-right"></i>
+				<div class="slide slide2">
+					<div class="slide-content">
+						<video 
+							src="/videos/{{$presentacion->videoFondo}}"
+							controls
+						></video>
+					</div>
+				</div>
+				<div class="slide slide3">
+					<div class="slide-content">
+						<video 
+							src="https://www.videvo.net/videvo_files/converted/2014_12/preview/TV_Studio_Camera_Lens_System_Close.mp466794.webm"
+							controls
+						></video>
+					</div>
+				</div>
 			</div>
-
+			<div class="btn-container">
+				<div id="section-btn">
+					<a class="btn">Ver video</a>
+				</div>
+			</div>
+			<i class="arrow right" id="arrow-right"></i>
 		</div>
+		<div id="overlay"></div>
 	</section>
-	<section id="section-nosotros">
-		<a href="#" class="btn">Ver video</a>
-	</section>	
 	<section id="section-trabajo">
 		<div>
 			<div class="cabecera-trabajo">
@@ -134,71 +144,140 @@
 	</section>
 
 	<script>
+		
 
-		const navHamburger = document.querySelector('#navHamburger');
+		// -------------------- VARIABLES GLOBALES ----------------------------------
+
 		const contenido = document.querySelector('.content');
-
-		navHamburger.addEventListener('click', (e) =>{
-			navHamburger.parentElement.classList.toggle('active');
-			contenido.classList.toggle('active');		
-			
-		});
+		const videoBtn = document.getElementById('section-btn')
+		const btnContainer = videoBtn.parentElement;
+		const overlay = document.getElementById('overlay')
+		const slider = document.getElementById('slider');
+		const videoGroup = document.querySelectorAll('.slide video')
 
 		let sliderImages = document.querySelectorAll('.slide'),
-			arrowLeft = document.querySelector('#arrow-left'),
-			arrowRight = document.querySelector('#arrow-right'),
-			current = 0;
-		//clear all iamges
-		function reset(){
-			for (let i = 0; i < sliderImages.length; i++){
-				sliderImages[i].style.display = 'none';				
+			videoBackground = document.getElementById('video-background');
+
+		let slideIndex = 0;
+
+		// -------------------- FUNCIONES ----------------------------------
+
+		// Manejo del video carrusel
+		function plusSlides(n, slides) {
+			showSlides(slideIndex += n, slides);
+		}
+
+		function showSlides(n, slides) {
+			if (n > slides.length - 1) {
+				slideIndex = 0;
 			}
+
+			if (n < 0) {
+				slideIndex = slides.length - 1;
+			}
+
+			reset(slides);
+
+			const slide = slides[slideIndex];
+
+			slide.style.display = 'block';
+		}
+		
+		//clear all images
+		function reset(slides) {
+			for (let i = 0; i < slides.length; i++){
+				slides[i].style.display = 'none';
+			}
+		}
+
+		function videoLoop(video) {
+			setInterval(function() {
+				if(video.currentTime >= 5) {
+					video.currentTime = 0;
+					video.play();
+				}
+			}, 300)
 		}
 
 		//initializes the slider
-		function startSlide(){
-			reset();
-			sliderImages[0].style.display = 'block';
+		function startSlide(slides) {
+			reset(slides);
+			slides[0].style.display = 'block';
+		}
+		
+
+		function slidesEngine(num, slides) {
+			plusSlides(num, slides);
+		}
+		
+		// Reseta los videos
+		function resetVideo(video) {
+			video.currentTime = 0;
+			video.pause();
+		}
+		
+		// Reseta los videos, setea el video correspondiente al background e inicia el vídeo
+		function videoEngine(Index) {
+			videoGroup.forEach(video => resetVideo(video))
+			videoBackground.src = videoGroup[Index].src;
+			videoGroup[Index].play();
 		}
 
-		//show previous
-		function slideLeft() {
-			reset();
-			sliderImages[current - 1].style.display = 'block';
-			current--;
+		// Muestre el vídeo con un overlay
+		function showVideo () {
+			// Desaparece al botón
+			btnContainer.style.display = 'none'
+			// Aparece el overlay
+			overlay.classList.add('overlay-active');
+			// Aparece los videos
+			slider.style.display = 'block';
+			slider.style.animation = 'appear .5s forwards'
+			// Inicia el video escogido
+			videoGroup[slideIndex].play()
 		}
 
-		//show next
-		function slideRight(){
-			reset();
-			sliderImages[current + 1].style.display = 'block';
-			current ++;
+		// Remueve el overlay al tocar 
+		function removeOverlay() {
+			// Resetea el video
+			resetVideo(videoGroup[slideIndex]);
+			// Remueve el overlay
+			overlay.classList.remove('overlay-active');
+			// Remueve a los vídeos
+			slider.style.display = 'none';
+			// Aparece el botón
+			btnContainer.style.display = 'inline-block'
+
 		}
 
+		/* startSlide(); */
+		startSlide(sliderImages);
+		videoLoop(videoBackground);
 
-		//Left arrowclick
-		arrowLeft.addEventListener('click',function(){
-			if(current === 0){
-				current = sliderImages.length;
-			}
-			slideLeft();
+		// -------------------- EVENTOS ----------------------------------
+
+		const arrowLeft = document.querySelector('#arrow-left');
+		arrowLeft.addEventListener('click', function () {
+			slidesEngine(-1, sliderImages);
+			videoEngine(slideIndex);
+		})
+
+		const arrowRight = document.querySelector('#arrow-right');
+		arrowRight.addEventListener('click', function () {
+			slidesEngine(1, sliderImages);
+			videoEngine(slideIndex);
+		})
+		
+		const navHamburger = document.querySelector('#navHamburger');
+		navHamburger.addEventListener('click', function() {
+			navHamburger.parentElement.classList.toggle('active');
+			contenido.classList.toggle('active');
+			
 		});
 
-		//Right arrowclick
-		arrowRight.addEventListener('click',function(){
-			if(current === sliderImages.length -1){
-				current = -1;
-			}
-			slideRight();
-		});
-
-
-		startSlide();
-
+		videoBtn.addEventListener('click', showVideo);
+		overlay.addEventListener('click', removeOverlay);
 
 
 	</script>
-	<script type="text/javascript" src="index.js"></script>
-
 </body>
 </html>
