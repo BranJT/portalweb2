@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Presentacion;
 use App\Model\Mensaje;
+use App\Model\Blog;
+use App\Model\Suscriptor;
+use App\Model\BlogDescargas;
 
 class PortalController extends Controller
 {
@@ -16,7 +19,8 @@ class PortalController extends Controller
     public function index()
     {
         $presentacion = Presentacion::find(1);
-        return view('welcome2',compact('presentacion'));
+        $blog = Blog::where('portada',1)->get()->first();
+        return view('welcome2',compact('presentacion','blog'));
     }
 
     public function getContact()
@@ -106,4 +110,43 @@ class PortalController extends Controller
     {
         //
     }
+
+    public function suscribirse($id)
+    {
+        return view('suscribirse',compact('id'));
+    }
+
+    public function storeSuscri(Request $request,$id)
+    {
+        $this->validate($request,[
+            'nombre' => 'required',
+            'correo' => 'required',
+            'telefono' => 'required',
+        ]);
+
+        $suscriptor = new Suscriptor();
+        $suscriptor->nombre = $request->input('nombre');
+        $suscriptor->correo = $request->input('correo');
+        $suscriptor->telefono = $request->input('telefono');
+        $suscriptor->save();
+
+        $blogdescarga = new BlogDescargas();
+        $blogdescarga->blog_id = $id;
+        $blogdescarga->save();
+
+        
+
+        $blog= Blog::find($id);
+        //PDF file is stored under project/public/download/info.pdf
+        $file= public_path()."/images/".$blog->archivo;
+
+        $headers = [
+                  'Content-Type' => 'application/bpm',
+               ];
+        //$respuesta = response()->download($file, $blog->archivo, $headers);
+        //return redirect()->route('portal')->response()->download($file, $blog->archivo, $headers);
+        //return response()->download($file, $blog->archivo, $headers);
+
+        return response()->download($file, $blog->archivo, $headers);
+        }
 }

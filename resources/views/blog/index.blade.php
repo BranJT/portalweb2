@@ -41,6 +41,7 @@
                 <div class="panel-body">
 
                     <div class="well">
+                        @if(isset($blogPortada))
 						<div class="row">
 							<div class="col-md-6 col-sm-6">
 								<img style="width:100%" src="/images/{{$blogPortada->imagen}}">
@@ -52,6 +53,19 @@
 							</div>
 	                      	
 						</div>
+                        @else
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <img style="width:100%" src="/images/">
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <h3><a href="#">Sin titulo</a></h3>
+                                <p>Lotem impsus</p>
+                            <small>Creada el </small>
+                            </div>
+                            
+                        </div>
+                        @endif
         						
         			</div>
                 </div>
@@ -63,14 +77,18 @@
 
                 <div class="panel-body">
 					<div class="row" align="center">
+                        @if(isset($blogPortada))
 						<div class="col-md-12">
 							<a href="/blog/downloadPDF/{{$blogPortada->id}}" class="btn btn-primary">Ver PDF</a>
 						</div>
+                        @endif
 					</div><br>
 					<div class="row" align="center">
+                        @if(isset($blogPortada))
 						<div class="col-md-12">
 							<a href="/blog/edit/{{$blogPortada->id}}" class="btn btn-warning">Editar</a>
 						</div>
+                        @endif
 					</div>
         						
         			

@@ -60,3 +60,7 @@ Route::put('/blog/update/{id}' , 'BlogController@update');
 Route::get('/blog/portada/{id}' , 'BlogController@hacerPortada');
 Route::delete('/blog/eliminar/{id}' , 'BlogController@destroy');
 Route::get('/blog/downloadPDF/{id}' , 'BlogController@downloadPDF');
+
+
+Route::get('/suscri/{id}' , 'PortalController@suscribirse');
+Route::post('/suscri/store/{id}' , 'PortalController@storeSuscri');

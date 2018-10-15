@@ -20,7 +20,6 @@
 		<a href="#" class="brand"> Myname</a>
 		<div class="navbar-right">
 				<a href="" class="link">PRODUCTO</a>
-				<a href="" class="link">NOSOTROS</a>
 				<a href="" class="link">BLOG</a>
 				<a href="/contact" class="link">CONTACTANOS</a>
 				@if (Route::has('login'))
@@ -48,19 +47,8 @@
 			
 		</div>
 	</section>
-	<section id="section-producto">
-		<div class="tema1" >
-			<div class="titulo">
-				<h3 ">Generamos Impacto</h3>
-			</div>
-			<div class="subtitulo">
-				<p>We focus our energy on creating new ventures from scratch, transforming our ecosystem of Intercorp companies, inspiring our business leaders, and exploring the recently possible.</p>
-			</div>
-			<a href="#section-videos"><div class="tema1-arrow"></div></a>
+	
 
-
-		</div>
-	</section>	
 	<section class="section-videos" id="section-videos">
 		<video 
 			id="video-background" 
@@ -98,15 +86,62 @@
 					</div>
 				</div>
 			</div>
-			<div class="btn-container">
-				<div id="section-btn">
-					<a class="btn">Ver video</a>
+			<div class="section-text-container">
+				<h2>Título</h2>
+				<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia quae soluta accusamus sapiente debitis fugiat, maiores aut, placeat similique assumenda harum possimus, deleniti necessitatibus magnam vitae ipsum nisi expedita laborum.</p>
+				<div class="btn-container">
+					<div id="section-btn">
+						<a class="btn">Ver video</a>
+					</div>
 				</div>
 			</div>
 			<i class="arrow right" id="arrow-right"></i>
 		</div>
 		<div id="overlay"></div>
 	</section>
+
+	<section id="section-blog">
+		<!-- <a href="#" class="btn">Ver video</a> -->
+		<div class="blog-container">
+			<div class="blog-texto">
+				<div class="blog-titulo">
+					@if(isset($blog))
+					{{$blog->titulo}}
+					@endif
+				</div>
+				<div class="blog-resumen">
+					@if(isset($blog))
+					{{$blog->resumen}}
+					@endif
+				</div>
+				@if(isset($blog))
+				<a href="/suscri/{{$blog[0]->id}}" class="btn">Descargar completo</a>
+				@endif
+			</div>
+			<div style="padding-top: 90px;">
+				@if(isset($blog))
+				<img src="/images/{{$blog[0]->imagen}}" class="blog-imagen">
+				@endif
+			</div>
+		</div>
+	</section>
+
+	<!--
+	<section id="section-producto">
+		<div class="tema1" >
+			<div class="titulo">
+				<h3 ">Generamos Impacto</h3>
+			</div>
+			<div class="subtitulo">
+				<p>We focus our energy on creating new ventures from scratch, transforming our ecosystem of Intercorp companies, inspiring our business leaders, and exploring the recently possible.</p>
+			</div>
+			<a href="#section-videos"><div class="tema1-arrow"></div></a>
+
+
+		</div>
+	</section>
+	
+
 	<section id="section-trabajo">
 		<div>
 			<div class="cabecera-trabajo">
@@ -143,12 +178,45 @@
 		<i class="far fa-envelope"></i>
 	</section>
 
+	-->
+
+	<footer>
+		<div class="footer-container">
+
+			<div class="footer-main">
+				<div class="footer-columna">
+					<h3>Direccion</h3>
+					<span class="fa fa-map-marker"><p>244 Av. Los Incas - Peru</p></span>
+					<span class="fa fa-phone"><p>(+51) 67 333723</p></span>
+					<span class="fa fa-envelope"><p>info@codigomasters.ocm</p></span>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div class="footer-copy-redes">
+			<div class="main-copy-redes">
+				<div class="footer-copy">
+					&copy; 2018, Todos los derechos reservados -| CodigoBrandon|.
+				</div>
+				<div class="footer-redes">
+					<a href="#" class="fab fa-facebook-f"></a>
+					<a href="#" class="fab fa-twitter"></a>
+					<a href="#" class="fab fa-youtube"></a>
+					<a href="#" class="fab fa-github"></a>
+				</div>
+			</div>
+		</div>
+	</footer>
+
 	<script>
 		
 
 		// -------------------- VARIABLES GLOBALES ----------------------------------
 
 		const contenido = document.querySelector('.content');
+		const btnBlock = document.querySelector('.section-text-container')
 		const videoBtn = document.getElementById('section-btn')
 		const btnContainer = videoBtn.parentElement;
 		const overlay = document.getElementById('overlay')
@@ -161,6 +229,38 @@
 		let slideIndex = 0;
 
 		// -------------------- FUNCIONES ----------------------------------
+
+		// Cambiar Texto
+		function changeText(title, texto) {
+			const titleElement = btnBlock.querySelector('h2')
+			const textElement = btnBlock.querySelector('p')
+			// title
+			titleElement.textContent = title
+			// text
+			textElement.textContent = texto
+		}
+
+		function changeTextOnVideo() {
+			switch (slideIndex) {
+				case 0:
+					changeText (
+						// Titulo
+						'Título',
+						// Texto 
+						`Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
+						Officia quae soluta accusamus sapiente debitis fugiat, maiores aut, 
+						placeat similique assumenda harum possimus, 
+						deleniti necessitatibus magnam vitae ipsum nisi expedita laborum.`
+					)
+					break;
+				case 1:
+					changeText('untitulo', 'lorenosalataqueoalamuerteyoquesenosequeponer')
+					break;
+				default:
+					changeText('otrotitulo', 'estovaaserunstringmuuuuuylargobuenonotanto')
+					break;
+			}
+		}
 
 		// Manejo del video carrusel
 		function plusSlides(n, slides) {
@@ -226,7 +326,7 @@
 		// Muestre el vídeo con un overlay
 		function showVideo () {
 			// Desaparece al botón
-			btnContainer.style.display = 'none'
+			btnBlock.style.display = 'none'
 			// Aparece el overlay
 			overlay.classList.add('overlay-active');
 			// Aparece los videos
@@ -245,7 +345,7 @@
 			// Remueve a los vídeos
 			slider.style.display = 'none';
 			// Aparece el botón
-			btnContainer.style.display = 'inline-block'
+			btnBlock.style.display = 'inline-block'
 
 		}
 
@@ -258,12 +358,14 @@
 		const arrowLeft = document.querySelector('#arrow-left');
 		arrowLeft.addEventListener('click', function () {
 			slidesEngine(-1, sliderImages);
+			changeTextOnVideo()
 			videoEngine(slideIndex);
 		})
 
 		const arrowRight = document.querySelector('#arrow-right');
 		arrowRight.addEventListener('click', function () {
 			slidesEngine(1, sliderImages);
+			changeTextOnVideo()
 			videoEngine(slideIndex);
 		})
 		
