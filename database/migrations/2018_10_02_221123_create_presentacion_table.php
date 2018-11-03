@@ -15,7 +15,7 @@ class CreatePresentacionTable extends Migration
     {
         Schema::create('presentacion', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('descripcion');
+            $table->text('descripcion');
             $table->string('videoFondo');
             $table->timestamps();
         });

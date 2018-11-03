@@ -17,7 +17,7 @@
 		<a href="#" class="toggle" id="navHamburger">
 			<i class="fas fa-bars"></i>
 		</a>
-		<a href="#" class="brand"> Myname</a>
+		<a href="#" class="brand"> Portal Web</a>
 		<div class="navbar-right">
 				<a href="" class="link">PRODUCTO</a>
 				<a href="" class="link">BLOG</a>
@@ -48,6 +48,20 @@
 		</div>
 	</section>
 	
+	<section id="section-producto">
+		<div class="tema1" >
+			<div class="titulo">
+				<h3 ">Generamos Cambio</h3>
+			</div>
+			<div class="subtitulo">
+				<p>Enfocamos nuestra energía creando nuevos emprendimientos desde cero, transformando nuestro ecosistema de empresas inspirando a nuestros líderes empresariales, y explorando lo recientemente posible.</p>
+			</div>
+			<a href="#section-videos"><div class="tema1-arrow"></div></a>
+
+
+		</div>
+	</section>
+
 
 	<section class="section-videos" id="section-videos">
 		<video 
@@ -55,40 +69,46 @@
 			autoplay
 			muted 
 			playsinline
-			src="https://player.vimeo.com/external/158148793.hd.mp4?s=8e8741dbee251d5c35a759718d4b0976fbf38b6f&profile_id=119&oauth2_token_id=57447761" 
+			src="/videos/fondo1.mp4" 
 			type="video/mp4"
 			></video>
 		<div class="video-group">
 			<i class="arrow left" id="arrow-left"></i>
 			<div id="slider">
-				<div class="slide slide1">
+				@if(count($productos)==0)
+				<div class="slide">
 					<div class="slide-content">
 						<video 
-							src="https://player.vimeo.com/external/158148793.hd.mp4?s=8e8741dbee251d5c35a759718d4b0976fbf38b6f&profile_id=119&oauth2_token_id=57447761"
+							src=""
 							controls	
 						></video>				
 					</div>
 				</div>
-				<div class="slide slide2">
+				@endif
+				@foreach($productos as $producto)
+				<div class="slide">
 					<div class="slide-content">
 						<video 
-							src="/videos/{{$presentacion->videoFondo}}"
-							controls
-						></video>
+							src="/videos/{{$producto->video}}"
+							controls	
+						></video>				
 					</div>
 				</div>
-				<div class="slide slide3">
-					<div class="slide-content">
-						<video 
-							src="https://www.videvo.net/videvo_files/converted/2014_12/preview/TV_Studio_Camera_Lens_System_Close.mp466794.webm"
-							controls
-						></video>
-					</div>
-				</div>
+				@endforeach				
 			</div>
 			<div class="section-text-container">
-				<h2>Título</h2>
-				<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia quae soluta accusamus sapiente debitis fugiat, maiores aut, placeat similique assumenda harum possimus, deleniti necessitatibus magnam vitae ipsum nisi expedita laborum.</p>
+				@if(count($productos)==0)
+				<div class="section-text-body">
+					<h2>No tiene ningun Producto registrado</h2>
+					<p>Entre a su sesion de usuario y en la parte de productos agregue los que desee</p>	
+				</div>
+				@endif
+				@foreach($productos as $producto)
+				<div class="section-text-body">
+					<h2>{{$producto->etiqueta}}</h2>
+					<p>{{$producto->descripcion}}</p>	
+				</div>
+				@endforeach
 				<div class="btn-container">
 					<div id="section-btn">
 						<a class="btn">Ver video</a>
@@ -115,12 +135,12 @@
 					@endif
 				</div>
 				@if(isset($blog))
-				<a href="/suscri/{{$blog[0]->id}}" class="btn">Descargar completo</a>
+				<a href="/suscri/{{$blog->id}}" class="btn">Descargar completo</a>
 				@endif
 			</div>
 			<div style="padding-top: 90px;">
 				@if(isset($blog))
-				<img src="/images/{{$blog[0]->imagen}}" class="blog-imagen">
+				<img src="/images/{{$blog->imagen}}" class="blog-imagen">
 				@endif
 			</div>
 		</div>
@@ -216,8 +236,9 @@
 		// -------------------- VARIABLES GLOBALES ----------------------------------
 
 		const contenido = document.querySelector('.content');
-		const btnBlock = document.querySelector('.section-text-container')
 		const videoBtn = document.getElementById('section-btn')
+		const btnBlock = document.querySelector('.section-text-container')
+		const textBlock = btnBlock.querySelectorAll('.section-text-body')
 		const btnContainer = videoBtn.parentElement;
 		const overlay = document.getElementById('overlay')
 		const slider = document.getElementById('slider');
@@ -230,36 +251,10 @@
 
 		// -------------------- FUNCIONES ----------------------------------
 
-		// Cambiar Texto
-		function changeText(title, texto) {
-			const titleElement = btnBlock.querySelector('h2')
-			const textElement = btnBlock.querySelector('p')
-			// title
-			titleElement.textContent = title
-			// text
-			textElement.textContent = texto
-		}
-
-		function changeTextOnVideo() {
-			switch (slideIndex) {
-				case 0:
-					changeText (
-						// Titulo
-						'Título',
-						// Texto 
-						`Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
-						Officia quae soluta accusamus sapiente debitis fugiat, maiores aut, 
-						placeat similique assumenda harum possimus, 
-						deleniti necessitatibus magnam vitae ipsum nisi expedita laborum.`
-					)
-					break;
-				case 1:
-					changeText('untitulo', 'lorenosalataqueoalamuerteyoquesenosequeponer')
-					break;
-				default:
-					changeText('otrotitulo', 'estovaaserunstringmuuuuuylargobuenonotanto')
-					break;
-			}
+		// Aparece y desaparece el bloque de título y texto
+		function textBlockEngine(index, arr) {
+			reset(arr)
+			arr[index].style.display = 'block'
 		}
 
 		// Manejo del video carrusel
@@ -302,6 +297,8 @@
 		//initializes the slider
 		function startSlide(slides) {
 			reset(slides);
+			reset(textBlock)
+			textBlock[0].style.display = 'block'
 			slides[0].style.display = 'block';
 		}
 		
@@ -324,7 +321,7 @@
 		}
 
 		// Muestre el vídeo con un overlay
-		function showVideo () {
+		function showVideo() {
 			// Desaparece al botón
 			btnBlock.style.display = 'none'
 			// Aparece el overlay
@@ -358,14 +355,14 @@
 		const arrowLeft = document.querySelector('#arrow-left');
 		arrowLeft.addEventListener('click', function () {
 			slidesEngine(-1, sliderImages);
-			changeTextOnVideo()
+			textBlockEngine(slideIndex, textBlock)
 			videoEngine(slideIndex);
 		})
 
 		const arrowRight = document.querySelector('#arrow-right');
 		arrowRight.addEventListener('click', function () {
 			slidesEngine(1, sliderImages);
-			changeTextOnVideo()
+			textBlockEngine(slideIndex, textBlock)
 			videoEngine(slideIndex);
 		})
 		

@@ -190,6 +190,7 @@
 
 .content p{
 	font-size: 2rem;
+	line-height: 3rem;
 	display: block;
 	padding-bottom: 2rem;
 	font-family: Trebuchet MS, Helvetica, sans-serif;
@@ -217,7 +218,8 @@
 
 #section-producto{
 	height: 100vh; 
-	background-image: linear-gradient( rgba(29,226,220,5) , #B39CE5); 
+	/*background-image: linear-gradient( rgba(29,226,220,5) , #B39CE5); */
+	background-image: linear-gradient( #c5cedd , #f7f8f9 ); 
 	font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 

@@ -20,5 +20,12 @@ class UsuarioSeeder extends Seeder
         $user->email = 'Brandon@hotmail.com';
         $user->password = bcrypt('qwerty');
         $user->save();
+
+        $blog = new Blog();
+        $blog->titulo = 'Test1';
+        $blog->resumen = 'REsumen1';
+        $blog->portada = 1;
+        $blog->save();
+
     }
 }

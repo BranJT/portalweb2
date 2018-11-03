@@ -8,6 +8,7 @@ use App\Model\Mensaje;
 use App\Model\Blog;
 use App\Model\Suscriptor;
 use App\Model\BlogDescargas;
+use App\Model\ProductoVideo;
 
 class PortalController extends Controller
 {
@@ -19,8 +20,9 @@ class PortalController extends Controller
     public function index()
     {
         $presentacion = Presentacion::find(1);
-        $blog = Blog::where('portada',1)->get()->first();
-        return view('welcome2',compact('presentacion','blog'));
+        $blog = Blog::where('portada',1)->first();
+        $productos = ProductoVideo::all();
+        return view('welcome2',compact('presentacion','blog','productos'));
     }
 
     public function getContact()
